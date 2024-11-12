@@ -1,1 +1,69 @@
-los codigos del carnaval
+<template>
+    <div>
+      <h2>Lista de Usuarios</h2>
+      
+      <!-- Tabla para mostrar los usuarios -->
+      <table v-if="usuarios.length" border="1">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Contraseña</th> <!-- Agregado el campo contraseña -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="usuario in usuarios" :key="usuario.usuario_nombre">
+            <td>{{ usuario.usuario_nombre }}</td>
+            <td>{{ usuario.rol_nombre }}</td>
+            <td>{{ usuario.estado }}</td>
+            <td>{{ usuario.contrasena }}</td> <!-- Agregado el campo contraseña -->
+          </tr>
+        </tbody>
+      </table>
+      
+      <!-- Mensaje si no hay usuarios -->
+      <p v-else>No hay usuarios disponibles.</p>
+    </div>
+  </template>
+  
+  <script>
+  // Importar el servicio que hace la llamada al backend
+  import { listarUsuarios } from '../services/index.js';
+  
+  export default {
+    data() {
+      return {
+        usuarios: [], // Aquí almacenaremos los usuarios que se obtienen
+      };
+    },
+    methods: {
+      // Método para cargar los usuarios desde el servicio
+      async cargarUsuarios() {
+        try {
+          this.usuarios = await listarUsuarios(); // Llamada al servicio para listar usuarios
+        } catch (error) {
+          console.error("Error al cargar los usuarios:", error);
+        }
+      },
+    },
+    mounted() {
+      // Cargar los usuarios cuando el componente se monte
+      this.cargarUsuarios();
+    },
+  };
+  </script>
+  
+  <style scoped>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: #f4f4f4;
+  }
+  </style>
